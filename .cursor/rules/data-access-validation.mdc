@@ -1,0 +1,11 @@
+---
+alwaysApply: true
+description: "Guidelines for data retrieval, modification, and validation in the project."
+---
+# Data Access and Validation Guidelines
+
+- **Data Retrieval:** All data retrieval in this project must be performed using Server Components.
+
+- **Data Modification (CUD Operations):** Any Create, Update, or Delete operations on our database must always be handled by Server Actions.
+
+- **Data Validation:** Data validation must be done using [Zod](https://zod.dev/) schemas, and the corresponding TypeScript types should be derived from these schemas. Avoid using `FormData` as a type for validation.

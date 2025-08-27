@@ -1,0 +1,5 @@
+---
+alwaysApply: true
+---
+# Database Interaction Guide
+All database interactions within this project must exclusively use the [Drizzle ORM](mdc:flashy-card/src/db/index.ts) with its defined [schema](mdc:flashy-card/src/db/schema.ts). Direct SQL queries or other ORMs are strictly prohibited. Ensure that all database operations leverage Drizzle's capabilities for type safety and consistency.

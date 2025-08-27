@@ -1,0 +1,44 @@
+---
+alwaysApply: true
+description: "Guidelines for Auth0 authentication and data access policies."
+---
+# Auth0 Authentication and Data Access
+All authentication in this project is handled by [Auth0](mdc:flashy-card/src/lib/auth0.ts). Authenticated users can only access their own data and are strictly prohibited from viewing or modifying data belonging to other users.
+
+### Good Examples:
+
+- **Accessing User's Own Profile:**
+  ```typescript
+  // User can fetch their own profile data using their authenticated ID.
+  const userProfile = await db.query.users.findFirst({
+    where: eq(users.id, currentUser.id),
+  });
+  ```
+
+- **Creating Data for the Authenticated User:**
+  ```typescript
+  // New data records are associated with the currently authenticated user.
+  await db.insert(posts).values({
+    title: "My New Post",
+    content: "...",
+    userId: currentUser.id,
+  });
+  ```
+
+### Bad Examples:
+
+- **Accessing Other Users' Data:**
+  ```typescript
+  // This is strictly prohibited as it attempts to access data not owned by the authenticated user.
+  const otherUserProfile = await db.query.users.findFirst({
+    where: eq(users.id, otherUserId), // BAD: Accessing another user's ID directly
+  });
+  ```
+
+- **Modifying Other Users' Data:**
+  ```typescript
+  // This operation is forbidden as it attempts to update data belonging to another user.
+  await db.update(posts)
+    .set({ content: "Updated content" })
+    .where(eq(posts.userId, otherUserId)); // BAD: Modifying another user's data
+  ```

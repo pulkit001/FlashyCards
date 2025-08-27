@@ -1,0 +1,8 @@
+---
+alwaysApply: true
+description: "Enforce Shadcn UI for styling."
+---
+# Shadcn UI Usage Guide
+This project will exclusively use Shadcn UI components for all styling purposes. No other UI libraries or custom styling elements should be introduced. If a required component is not available in Shadcn UI, please refer to the official Shadcn UI documentation to download and integrate it.
+
+[Shadcn UI Documentation](https://ui.shadcn.com/docs)
