@@ -3,11 +3,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "../components/theme-provider";
+import { ClerkProvider } from "@clerk/nextjs";
 import { Button } from "../components/ui/button";
-import Auth0ProviderWrapper from "./auth0-provider";
-import Link from "next/link";
-import { useUser } from '@auth0/nextjs-auth0';
-import Profile from './profile';
+import { dark } from '@clerk/themes';
+import { HeaderAuthButtons } from "../components/header-auth-buttons";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,9 +20,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { user } = useUser();
   return (
-    <Auth0ProviderWrapper>
+    <ClerkProvider appearance={{ baseTheme: dark }}>
       <html lang="en" suppressHydrationWarning>
         <body className={inter.className}>
           <ThemeProvider
@@ -32,27 +30,16 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <header className="flex items-center justify-between p-4">
-              <h1 className="text-xl font-bold">Flashy Cards</h1>
-              <div className="flex items-center gap-4">
-                {user ? (
-                  <>
-                    <Profile />
-                    <a href="/auth/logout">
-                      <Button>Sign Out</Button>
-                    </a>
-                  </>
-                ) : (
-                  <a href="/auth/login">
-                    <Button>Sign In</Button>
-                  </a>
-                )}
+            <header className="relative flex items-center justify-center p-4 bg-gray-100 bg-opacity-95 shadow-md text-foreground border-b">
+              <h1 className="text-xl font-bold mb-4 sm:mb-0 text-black">Flashy Cards</h1>
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-4">
+                <HeaderAuthButtons />
               </div>
             </header>
             {children}
           </ThemeProvider>
         </body>
       </html>
-    </Auth0ProviderWrapper>
+    </ClerkProvider>
   );
 }
