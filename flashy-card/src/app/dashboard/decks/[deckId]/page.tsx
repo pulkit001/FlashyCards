@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { notFound } from "next/navigation";
 import { getDeckCards, Card as Flashcard } from "@/db/queries/cards";
 import { getDeckById, Deck } from "@/db/queries/decks";
-import { CreateCardForm } from "@/components/create-card-form";
+import { CardForm } from "@/components/card-form";
 import { CardItem } from "@/components/card-item";
 import { RefreshButton } from "@/components/refresh-button";
 import Link from 'next/link';
@@ -84,7 +84,7 @@ export default async function DeckDetailPage({ params }: DeckDetailPageProps) {
         </div>
         
         <div className="flex justify-end">
-          <CreateCardForm deckId={deckId} />
+          <CardForm deckId={deckId} />
         </div>
       </div>
       
@@ -93,7 +93,7 @@ export default async function DeckDetailPage({ params }: DeckDetailPageProps) {
           <div className="text-6xl mb-6">🃏</div>
           <h2 className="text-2xl font-semibold text-muted-foreground mb-3">No cards yet</h2>
           <p className="text-muted-foreground mb-8">Create your first card to get started with this deck!</p>
-          <CreateCardForm deckId={deckId} />
+          <CardForm deckId={deckId} />
         </div>
       ) : (
         <div className="flex flex-wrap gap-6">

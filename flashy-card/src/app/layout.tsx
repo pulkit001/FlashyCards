@@ -7,6 +7,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from '@clerk/themes';
 import { HeaderAuthButtons } from "../components/header-auth-buttons";
 import { MobileNav } from "../components/mobile-nav";
+import { ThemeToggle } from "../components/theme-toggle";
 import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -70,6 +71,7 @@ export default function RootLayout({
 
                   {/* Auth Buttons and Mobile Nav */}
                   <div className="flex items-center space-x-4">
+                    <ThemeToggle />
                     <MobileNav />
                     <HeaderAuthButtons />
                   </div>

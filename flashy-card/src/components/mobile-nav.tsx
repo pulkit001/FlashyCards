@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
+import { ThemeToggle } from './theme-toggle';
 
 export function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
@@ -50,6 +51,13 @@ export function MobileNav() {
               </Link>
             ))}
           </nav>
+          
+          <div className="pt-4 border-t border-border">
+            <div className="flex items-center justify-between px-4 py-2">
+              <span className="text-sm font-medium text-muted-foreground">Theme</span>
+              <ThemeToggle />
+            </div>
+          </div>
         </div>
       </SheetContent>
     </Sheet>
