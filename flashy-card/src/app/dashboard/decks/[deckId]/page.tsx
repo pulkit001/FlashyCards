@@ -1,13 +1,20 @@
 
 import { auth } from "@clerk/nextjs/server";
+import { SUBSCRIPTION } from "@/lib/constants";
 import { notFound } from "next/navigation";
 import { getDeckCards, Card as Flashcard } from "@/db/queries/cards";
 import { getDeckById, Deck } from "@/db/queries/decks";
 import { CardForm } from "@/components/card-form";
 import { CardItem } from "@/components/card-item";
 import { RefreshButton } from "@/components/refresh-button";
+import { AIGenerateCards } from "@/components/ai-generate-cards";
+import { SubscriptionGuard } from "@/components/subscription-guard";
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { PageContainer, Flex, CardGrid } from "@/components/ui/layout";
+import { PageTitle, Muted } from "@/components/ui/typography";
+import { EmptyState, StatusBadge } from "@/components/ui/status";
+import { isRecentlyUpdated } from "@/lib/utils";
 
 interface DeckDetailPageProps {
   params: {
@@ -15,12 +22,7 @@ interface DeckDetailPageProps {
   };
 }
 
-// Helper function to check if deck was updated recently (within last 24 hours)
-function isRecentlyUpdated(lastUpdated: Date): boolean {
-  const now = new Date();
-  const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-  return lastUpdated > twentyFourHoursAgo;
-}
+// This helper function is now imported from utils
 
 export default async function DeckDetailPage({ params }: DeckDetailPageProps) {
   const { userId } = await auth();
@@ -83,7 +85,10 @@ export default async function DeckDetailPage({ params }: DeckDetailPageProps) {
           </div>
         </div>
         
-        <div className="flex justify-end">
+        <div className="flex flex-col sm:flex-row gap-3 justify-end">
+          <SubscriptionGuard feature={SUBSCRIPTION.FEATURES.AI_CARDS}>
+            <AIGenerateCards deckId={deckId} />
+          </SubscriptionGuard>
           <CardForm deckId={deckId} />
         </div>
       </div>
@@ -92,11 +97,16 @@ export default async function DeckDetailPage({ params }: DeckDetailPageProps) {
         <div className="text-center py-20">
           <div className="text-6xl mb-6">🃏</div>
           <h2 className="text-2xl font-semibold text-muted-foreground mb-3">No cards yet</h2>
-          <p className="text-muted-foreground mb-8">Create your first card to get started with this deck!</p>
-          <CardForm deckId={deckId} />
+          <p className="text-muted-foreground mb-8">Create your first card manually or generate 10 cards with AI!</p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+                      <SubscriptionGuard feature={SUBSCRIPTION.FEATURES.AI_CARDS}>
+            <AIGenerateCards deckId={deckId} />
+          </SubscriptionGuard>
+            <CardForm deckId={deckId} />
+          </div>
         </div>
       ) : (
-        <div className="flex flex-wrap gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
           {deckCards.map((card: Flashcard) => (
             <CardItem key={card.id} card={card} deckId={deckId} />
           ))}

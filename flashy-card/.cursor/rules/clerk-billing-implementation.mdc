@@ -1,0 +1,127 @@
+---
+alwaysApply: true
+---
+# Clerk Billing Implementation Guide
+
+This application uses Clerk Billing to handle all subscription and payment functionality. This rule covers the implementation patterns, components, and best practices for managing user subscriptions and access control.
+
+## Architecture Overview
+
+- **Billing Provider**: Clerk Billing (not Stripe Billing)
+- **Payment Processing**: Stripe (via Clerk's integration)
+- **Transaction Fee**: 0.7% + Stripe fees
+- **Access Control**: Plans and features for user entitlements
+
+## Key Implementation Patterns
+
+### 1. Subscription Plans
+- Plans are created and managed through the Clerk Dashboard
+- Each plan can have multiple features
+- Plans are configured as "Plans for Users" (B2C SaaS model)
+- Use the `publicly available` option to control visibility in Clerk components
+
+### 2. Access Control Implementation
+Use the `has()` method for server-side access control:
+
+```typescript
+// Check if user has a specific plan
+const hasProAccess = has({ plan: 'pro_model' })
+const isFreeUser = has({ plan: 'free_user' })
+
+// Check if user has a specific feature
+const hasUnlimitedDecks = has({ feature: 'unlimited_deck_limit' })
+const hasAICards = has({ feature: 'ai_cards' })
+const hasBasicDeckLimit = has({ feature: '3_deck_limit' })
+```
+
+### 3. Protected Routes and Components
+Use the `<Protect>` component for React-based access control:
+
+```tsx
+// Protect content for Pro users only
+<Protect
+  plan="pro_model"
+  fallback={<p>Upgrade to Pro to access this feature</p>}
+>
+  <ProContent />
+</Protect>
+
+// Protect content based on specific features
+<Protect
+  feature="ai_cards"
+  fallback={<p>Upgrade to Pro to access AI-generated cards</p>}
+>
+  <AICardGenerator />
+</Protect>
+
+<Protect
+  feature="unlimited_deck_limit"
+  fallback={<p>You've reached the deck limit. Upgrade to Pro for unlimited decks</p>}
+>
+  <CreateDeckButton />
+</Protect>
+```
+
+### 4. Pricing Page Implementation
+Create dedicated pricing pages using the `<PricingTable />` component:
+
+```tsx
+// app/pricing/page.tsx
+import { PricingTable } from '@clerk/nextjs'
+
+export default function PricingPage() {
+  return (
+    <div className="max-w-4xl mx-auto p-4">
+      <PricingTable />
+    </div>
+  )
+}
+```
+
+## Database Integration
+
+All database interactions related to billing must be encapsulated within helper functions located in the `src/db/queries` directory. No direct database access should occur outside of these designated helper functions.
+
+## Component Guidelines
+
+- Use ShadCN UI components for all UI elements (buttons, forms, dialogs, etc.)
+- Do not use Clerk UI components for buttons, forms, or other interface elements
+- Integrate Clerk Billing components like `<PricingTable />` and `<Protect />` as needed
+
+## File Structure
+
+- **Pricing Pages**: `app/pricing/page.tsx`
+- **Protected Content**: Use `<Protect>` wrapper or `has()` checks
+- **Billing Queries**: `src/db/queries/` directory
+- **Access Control**: Implement in page components and API routes
+
+## Best Practices
+
+1. **Plan Management**: Create plans through Clerk Dashboard, not programmatically
+2. **Feature Gating**: Use features to control access to specific functionality
+3. **Fallback Handling**: Always provide meaningful fallback content for protected routes
+4. **Error Handling**: Implement proper error handling for billing-related operations
+5. **Testing**: Use Clerk's development gateway for testing in development environment
+
+## Plans and Features
+
+### Plans
+- **free_user**: Basic flashcard functionality with limited deck creation
+- **pro_model**: Advanced features including unlimited decks and AI-generated cards
+
+### Features
+- **3_deck_limit**: Allows creation of up to 3 decks (typically for free_user plan)
+- **unlimited_deck_limit**: Allows unlimited deck creation (typically for pro_model plan)  
+- **ai_cards**: Enables AI-generated flashcard content (typically for pro_model plan)
+
+### Common Use Cases
+- **Free Users**: Basic flashcard creation and study with 3 deck limit
+- **Pro Users**: Unlimited decks, AI-generated cards, advanced study features
+
+## Integration Points
+
+- User authentication and profile management
+- Subscription status checking
+- Payment processing and webhook handling
+- Access control for premium features
+- Billing history and invoice management

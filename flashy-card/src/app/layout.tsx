@@ -56,6 +56,12 @@ export default function RootLayout({
                       Dashboard
                     </Link>
                     <Link 
+                      href="/pricing" 
+                      className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200 hover:scale-105 transform"
+                    >
+                      Pricing
+                    </Link>
+                    <Link 
                       href="/about" 
                       className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200 hover:scale-105 transform"
                     >

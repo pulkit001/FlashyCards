@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { decks } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, count } from "drizzle-orm";
 import { InferSelectModel } from "drizzle-orm";
 import { and } from "drizzle-orm";
 
@@ -83,5 +83,19 @@ export async function updateDeckLastUpdated(deckId: string, userId: string) {
   } catch (error) {
     console.error("Error updating deck last updated timestamp:", error);
     throw new Error("Failed to update deck last updated timestamp.");
+  }
+}
+
+export async function getUserDeckCount(userId: string): Promise<number> {
+  if (!userId) {
+    console.error("User ID is required to count decks.");
+    return 0;
+  }
+  try {
+    const result = await db.select({ count: count() }).from(decks).where(eq(decks.userId, userId));
+    return result[0]?.count || 0;
+  } catch (error) {
+    console.error("Error counting user decks:", error);
+    throw new Error("Failed to count user decks.");
   }
 }

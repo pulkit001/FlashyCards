@@ -1,6 +1,38 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Custom Clerk Pricing Table Styling */
+.pricing-table-container {
+  /* Ensure the pricing table integrates well with ShadCN UI */
+}
+
+.pricing-table-container [data-clerk-element] {
+  border-radius: var(--radius-lg);
+}
+
+/* Style Clerk pricing cards to match ShadCN UI theme */
+.pricing-table-container .cl-plan {
+  border-radius: var(--radius-lg);
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  transition: all 0.2s ease;
+}
+
+.pricing-table-container .cl-plan:hover {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+.pricing-table-container .cl-planButton {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+}
+
+.pricing-table-container .cl-planButton:hover {
+  background: hsl(var(--primary) / 0.9);
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

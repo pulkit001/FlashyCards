@@ -12,6 +12,7 @@ export function MobileNav() {
 
   const navigationItems = [
     { href: '/dashboard', label: 'Dashboard' },
+    { href: '/pricing', label: 'Pricing' },
     { href: '/about', label: 'About' },
     { href: '/help', label: 'Help' },
   ];

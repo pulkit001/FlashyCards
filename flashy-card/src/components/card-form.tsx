@@ -13,9 +13,10 @@ interface CardFormProps {
   deckId: string;
   card?: Flashcard; // Optional - if provided, it's edit mode
   trigger?: React.ReactNode; // Custom trigger element
+  onClose?: () => void; // Optional callback when dialog closes
 }
 
-export function CardForm({ deckId, card, trigger }: CardFormProps) {
+export function CardForm({ deckId, card, trigger, onClose }: CardFormProps) {
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -60,6 +61,7 @@ export function CardForm({ deckId, card, trigger }: CardFormProps) {
       }
 
       setOpen(false);
+      onClose?.(); // Call onClose callback if provided
       // Reset form for create mode
       if (!isEditMode) {
         setFormData({
@@ -78,6 +80,7 @@ export function CardForm({ deckId, card, trigger }: CardFormProps) {
 
   const handleCancel = () => {
     setOpen(false);
+    onClose?.(); // Call onClose callback if provided
     // Reset form to original values for edit mode
     if (card) {
       setFormData({

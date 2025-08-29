@@ -3,13 +3,38 @@
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
 import { createDeck } from "@/app/dashboard/actions";
 import { Plus } from "lucide-react";
+import Link from "next/link";
+import { 
+  FormContainer, 
+  FormField, 
+  FormActions, 
+  EnhancedInput, 
+  SubmitButton, 
+  CancelButton 
+} from "./ui/form-components";
+import { Alert } from "./ui/status";
 
 export function CreateDeckForm() {
   const [open, setOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (formData: FormData) => {
+    setIsSubmitting(true);
+    setError(null);
+    
+    try {
+      await createDeck(formData);
+      setOpen(false);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+      setError(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -26,46 +51,72 @@ export function CreateDeckForm() {
             Fill in the details for your new flashcard deck.
           </DialogDescription>
         </DialogHeader>
-        <form action={createDeck} onSubmit={() => setOpen(false)} className="space-y-6 py-2">
-          <div className="space-y-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right font-medium">
-                Name
-              </Label>
-              <Input
-                id="name"
-                name="name"
-                className="col-span-3 h-11"
-                placeholder="Enter deck name"
-                required
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="description" className="text-right font-medium">
-                Description
-              </Label>
-              <Input
-                id="description"
-                name="description"
-                className="col-span-3 h-11"
-                placeholder="Enter deck description (optional)"
-              />
-            </div>
-          </div>
-          <div className="flex justify-end gap-3 pt-4">
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={() => setOpen(false)}
+        <FormContainer onSubmit={(e) => {
+          e.preventDefault();
+          const formData = new FormData(e.target as HTMLFormElement);
+          handleSubmit(formData);
+        }}>
+          {error && (
+            <Alert 
+              variant={error.includes("Upgrade to Pro") ? "warning" : "error"}
+              title="Error creating deck"
+            >
+              <div className="flex items-center justify-between">
+                <span>{error}</span>
+                {error.includes("Upgrade to Pro") && (
+                  <Link href="/pricing" className="ml-auto text-blue-600 hover:text-blue-800 underline font-medium">
+                    Upgrade Now
+                  </Link>
+                )}
+              </div>
+            </Alert>
+          )}
+          
+          <FormField
+            label="Deck Name"
+            required
+            labelProps={{ htmlFor: "name" }}
+            hint="Choose a descriptive name for your flashcard deck"
+          >
+            <EnhancedInput
+              id="name"
+              name="name"
+              placeholder="Enter deck name"
+              required
+              disabled={isSubmitting}
+              loading={isSubmitting}
+            />
+          </FormField>
+          
+          <FormField
+            label="Description"
+            labelProps={{ htmlFor: "description" }}
+            hint="Optional description to help you remember what this deck is about"
+          >
+            <EnhancedInput
+              id="description"
+              name="description"
+              placeholder="Enter deck description (optional)"
+              disabled={isSubmitting}
+            />
+          </FormField>
+          
+          <FormActions variant="end">
+            <CancelButton 
+              onClick={() => {
+                setOpen(false);
+                setError(null);
+              }}
+            />
+            <SubmitButton 
+              loading={isSubmitting}
+              loadingText="Creating..."
               size="lg"
             >
-              Cancel
-            </Button>
-            <Button type="submit" size="lg">
               Create Deck
-            </Button>
-          </div>
-        </form>
+            </SubmitButton>
+          </FormActions>
+        </FormContainer>
       </DialogContent>
     </Dialog>
   );

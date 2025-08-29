@@ -3,19 +3,34 @@
 import { z } from "zod";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from 'next/cache';
-import { createDeckQuery, deleteDeckQuery, updateDeckQuery, updateDeckLastUpdated } from "@/db/queries/decks";
+import { createDeckQuery, deleteDeckQuery, updateDeckQuery, updateDeckLastUpdated, getUserDeckCount } from "@/db/queries/decks";
 import { createCardQuery, deleteCardQuery, updateCardQuery, getCardDeckId } from "@/db/queries/cards";
+import { generateFlashcards } from "@/lib/gemini";
+import { APP_CONFIG, SUBSCRIPTION, ERROR_MESSAGES, ROUTES } from "@/lib/constants";
+import { UnauthorizedError, SubscriptionError, ValidationError, AppError } from "@/lib/errors";
+import type { CreateDeckFormData, CreateCardFormData, UpdateCardFormData, GenerateCardsFormData, GenerateCardsResult } from "@/lib/types";
 
 const createDeckSchema = z.object({
-  name: z.string().min(1, "Name is required").max(256),
+  name: z.string().min(1, "Name is required").max(APP_CONFIG.DECK_NAME_MAX_LENGTH),
   description: z.string().optional(),
 });
 
 export async function createDeck(formData: FormData) {
-  const { userId } = await auth();
+  const { userId, has } = await auth();
 
   if (!userId) {
-    throw new Error("Unauthorized");
+    throw new UnauthorizedError();
+  }
+
+  // Check if user has pro plan
+  const hasProPlan = has({ plan: SUBSCRIPTION.PLANS.PRO });
+  
+  // If user is not pro, check deck limit
+  if (!hasProPlan) {
+    const currentDeckCount = await getUserDeckCount(userId);
+    if (currentDeckCount >= APP_CONFIG.FREE_DECK_LIMIT) {
+      throw new SubscriptionError(ERROR_MESSAGES.DECK_LIMIT_REACHED);
+    }
   }
 
   const validatedFields = createDeckSchema.safeParse({
@@ -24,14 +39,14 @@ export async function createDeck(formData: FormData) {
   });
 
   if (!validatedFields.success) {
-    throw new Error(validatedFields.error.message);
+    throw new ValidationError(validatedFields.error.message);
   }
 
   const { name, description } = validatedFields.data;
 
   await createDeckQuery(name, description, userId);
 
-  revalidatePath("/dashboard");
+  revalidatePath(ROUTES.DASHBOARD);
 }
 
 export async function deleteDeck(formData: FormData) {
@@ -61,8 +76,8 @@ export async function deleteDeck(formData: FormData) {
 
 const createCardSchema = z.object({
   deckId: z.string(),
-  frontText: z.string().min(1, "Front text is required"),
-  backText: z.string().min(1, "Back text is required"),
+  frontText: z.string().min(1, "Front text is required").max(APP_CONFIG.CARD_TEXT_MAX_LENGTH),
+  backText: z.string().min(1, "Back text is required").max(APP_CONFIG.CARD_TEXT_MAX_LENGTH),
   description: z.string().optional(),
 });
 
@@ -166,4 +181,79 @@ export async function updateCard(formData: FormData) {
   await updateDeckLastUpdated(actualDeckId, userId); // Update lastUpdated timestamp for the deck
 
   revalidatePath(`/dashboard/decks/${actualDeckId}`);
+}
+
+const generateCardsSchema = z.object({
+  topic: z.string().min(1, "Topic is required").max(APP_CONFIG.TOPIC_MAX_LENGTH),
+  deckId: z.string().min(1, "Deck ID is required"),
+});
+
+export async function generateAICards(formData: FormData): Promise<GenerateCardsResult> {
+  const { userId, has } = await auth();
+
+  if (!userId) {
+    throw new UnauthorizedError();
+  }
+
+  // Check if user has pro plan - AI features are Pro only
+  const hasProPlan = has({ plan: SUBSCRIPTION.PLANS.PRO });
+  if (!hasProPlan) {
+    throw new SubscriptionError(ERROR_MESSAGES.AI_PRO_REQUIRED);
+  }
+
+  const validatedFields = generateCardsSchema.safeParse({
+    topic: formData.get("topic"),
+    deckId: formData.get("deckId"),
+  });
+
+  if (!validatedFields.success) {
+    throw new Error(validatedFields.error.message);
+  }
+
+  const { topic, deckId } = validatedFields.data;
+
+  try {
+    // Generate flashcards using AI
+    const flashcards = await generateFlashcards({ topic, count: APP_CONFIG.AI_CARDS_PER_GENERATION });
+    
+    if (flashcards.length === 0) {
+      throw new AppError(ERROR_MESSAGES.NO_CARDS_GENERATED);
+    }
+
+    // Create cards in the database
+    const createdCards = [];
+    for (const flashcard of flashcards) {
+      try {
+        await createCardQuery(deckId, userId, flashcard.question, flashcard.answer, undefined);
+        createdCards.push(flashcard);
+      } catch (error) {
+        console.error("Error creating card:", error);
+        // Continue with other cards even if one fails
+      }
+    }
+
+    if (createdCards.length === 0) {
+      throw new Error("Failed to create cards. Please try again.");
+    }
+
+    // Update deck timestamp
+    await updateDeckLastUpdated(deckId, userId);
+
+    revalidatePath(`/dashboard/decks/${deckId}`);
+    
+    return {
+      success: true,
+      count: createdCards.length,
+      message: `Successfully generated ${createdCards.length} AI-powered flashcards!`
+    };
+
+  } catch (error) {
+    console.error("Error generating AI cards:", error);
+    
+    if (error instanceof Error) {
+      throw error;
+    }
+    
+    throw new Error("Failed to generate AI cards. Please try again later.");
+  }
 }
