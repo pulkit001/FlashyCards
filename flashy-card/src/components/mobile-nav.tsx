@@ -3,12 +3,14 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, X } from 'lucide-react';
+import { Menu, Crown } from 'lucide-react';
 import Link from 'next/link';
 import { ThemeToggle } from './theme-toggle';
+import { useSubscription } from '@/hooks/use-subscription';
 
 export function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
+  const { isProUser } = useSubscription();
 
   const navigationItems = [
     { href: '/dashboard', label: 'Dashboard' },
@@ -23,21 +25,29 @@ export function MobileNav() {
         <Button
           variant="ghost"
           size="sm"
-          className="lg:hidden p-2 hover:bg-accent"
+          className="lg:hidden p-1.5 sm:p-2 hover:bg-accent h-8 w-8 sm:h-9 sm:w-9"
         >
-          <Menu className="h-5 w-5" />
+          <Menu className="h-4 w-4 sm:h-5 sm:w-5" />
           <span className="sr-only">Toggle menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-[300px] sm:w-[400px]">
+      <SheetContent side="left" className="w-[280px] sm:w-[350px]">
         <div className="flex flex-col space-y-6 mt-8">
-          <div className="flex items-center space-x-2 mb-8">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-black dark:bg-white text-white dark:text-black font-bold text-lg">
-              F
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center space-x-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-black dark:bg-white text-white dark:text-black font-bold text-lg">
+                F
+              </div>
+              <span className="text-xl font-bold text-foreground">
+                Flashy Cards
+              </span>
             </div>
-            <span className="text-xl font-bold text-foreground">
-              Flashy Cards
-            </span>
+            {isProUser && (
+              <div className="flex items-center bg-gradient-to-r from-amber-400 to-yellow-500 text-black px-2 py-1 rounded-full text-xs font-medium shadow-lg sm:hidden">
+                <Crown className="h-3 w-3 mr-1" />
+                Pro
+              </div>
+            )}
           </div>
           
           <nav className="flex flex-col space-y-4">

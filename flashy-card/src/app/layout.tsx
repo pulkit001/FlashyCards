@@ -34,16 +34,17 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 header-pattern">
-              <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex h-16 items-center justify-between">
+              <div className="container mx-auto px-3 sm:px-4 lg:px-8">
+                <div className="flex h-12 sm:h-14 lg:h-16 items-center justify-between">
                   {/* Logo and Brand */}
-                  <div className="flex items-center space-x-4">
-                    <Link href="/" className="flex items-center space-x-2 group">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-black dark:bg-white text-white dark:text-black font-bold text-lg shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
+                  <div className="flex items-center space-x-2 sm:space-x-3 lg:space-x-4 min-w-0">
+                    <Link href="/" className="flex items-center space-x-1 sm:space-x-2 group min-w-0">
+                      <div className="flex h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 items-center justify-center rounded-lg bg-black dark:bg-white text-white dark:text-black font-bold text-sm sm:text-base lg:text-lg shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300 flex-shrink-0">
                         F
                       </div>
-                      <span className="text-xl font-bold text-foreground group-hover:text-muted-foreground transition-all duration-300">
-                        Flashy Cards
+                      <span className="text-base sm:text-lg lg:text-xl font-bold text-foreground group-hover:text-muted-foreground transition-all duration-300 truncate">
+                        <span className="hidden xs:inline">Flashy Cards</span>
+                        <span className="xs:hidden">Flashy</span>
                       </span>
                     </Link>
                   </div>
@@ -77,8 +78,10 @@ export default function RootLayout({
                   </nav>
 
                   {/* Auth Buttons and Mobile Nav */}
-                  <div className="flex items-center space-x-4">
-                    <ThemeToggle />
+                  <div className="flex items-center space-x-1 sm:space-x-2 lg:space-x-4">
+                    <div className="hidden sm:block">
+                      <ThemeToggle />
+                    </div>
                     <MobileNav />
                     <HeaderAuthButtons />
                   </div>
