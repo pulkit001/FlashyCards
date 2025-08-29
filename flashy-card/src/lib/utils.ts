@@ -84,8 +84,8 @@ export function unique<T>(array: T[]): T[] {
 }
 
 // Form data utilities
-export function formDataToObject(formData: FormData): Record<string, any> {
-  const obj: Record<string, any> = {};
+export function formDataToObject(formData: FormData): Record<string, unknown> {
+  const obj: Record<string, unknown> = {};
   for (const [key, value] of formData.entries()) {
     if (obj[key]) {
       // Handle multiple values for the same key
@@ -106,7 +106,7 @@ export function delay(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
   waitFor: number
 ): (...args: Parameters<T>) => void {

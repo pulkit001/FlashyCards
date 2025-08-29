@@ -47,7 +47,7 @@ export default function PricingSuccessPage() {
                 <CardTitle className="text-2xl">Pro Features Unlocked</CardTitle>
               </div>
               <CardDescription className="text-lg">
-                Here's what you can now do with your Pro subscription
+                Here&apos;s what you can now do with your Pro subscription
               </CardDescription>
             </CardHeader>
             

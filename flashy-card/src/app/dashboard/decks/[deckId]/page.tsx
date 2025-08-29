@@ -17,9 +17,9 @@ import { EmptyState, StatusBadge } from "@/components/ui/status";
 import { isRecentlyUpdated } from "@/lib/utils";
 
 interface DeckDetailPageProps {
-  params: {
+  params: Promise<{
     deckId: string;
-  };
+  }>;
 }
 
 // This helper function is now imported from utils
@@ -35,7 +35,7 @@ export default async function DeckDetailPage({ params }: DeckDetailPageProps) {
     );
   }
 
-  const deckId = params.deckId;
+  const { deckId } = await params;
 
   // No need for isNaN check as deckId is now a string
   // if (isNaN(deckId)) {

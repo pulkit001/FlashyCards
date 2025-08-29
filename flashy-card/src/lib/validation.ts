@@ -111,7 +111,7 @@ export function validateFormData<T>(
 
 // Utility function to extract and validate form data
 export function extractFormData(formData: FormData) {
-  const obj: Record<string, any> = {};
+  const obj: Record<string, unknown> = {};
   for (const [key, value] of formData.entries()) {
     if (obj[key]) {
       if (Array.isArray(obj[key])) {

@@ -14,6 +14,7 @@ interface AIGenerateCardsProps {
 }
 
 export function AIGenerateCards({ deckId }: AIGenerateCardsProps) {
+  
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -111,9 +112,9 @@ export function AIGenerateCards({ deckId }: AIGenerateCardsProps) {
             <div className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-md">
               <p className="font-medium mb-1">💡 Tips for better results:</p>
               <ul className="space-y-1 text-xs">
-                <li>• Be specific: "React useState hook" vs "React"</li>
-                <li>• Include context: "Spanish food vocabulary for beginners"</li>
-                <li>• Mention difficulty: "Advanced calculus derivatives"</li>
+                <li>• Be specific: &quot;React useState hook&quot; vs &quot;React&quot;</li>
+                <li>• Include context: &quot;Spanish food vocabulary for beginners&quot;</li>
+                <li>• Mention difficulty: &quot;Advanced calculus derivatives&quot;</li>
               </ul>
             </div>
           </div>

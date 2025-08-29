@@ -57,7 +57,7 @@ export function handleError(error: unknown): never {
 }
 
 // Safe async function wrapper
-export function safeAsync<T extends any[], R>(
+export function safeAsync<T extends unknown[], R>(
   fn: (...args: T) => Promise<R>
 ) {
   return async (...args: T): Promise<R> => {

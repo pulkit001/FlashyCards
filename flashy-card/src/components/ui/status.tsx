@@ -280,7 +280,7 @@ export function UsageStats({
       />
       {isAtLimit && (
         <p className="text-xs text-destructive">
-          You've reached your {label.toLowerCase()} limit
+          You&apos;ve reached your {label.toLowerCase()} limit
         </p>
       )}
     </div>
