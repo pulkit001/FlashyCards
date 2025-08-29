@@ -24,7 +24,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider appearance={{ baseTheme: dark }}>
+    <ClerkProvider 
+      appearance={{
+        baseTheme: undefined, // Let Clerk auto-detect based on system theme
+        elements: {
+          formButtonPrimary: 'bg-primary text-primary-foreground hover:bg-primary/90',
+          card: 'bg-card border border-border',
+          headerTitle: 'text-foreground',
+          headerSubtitle: 'text-muted-foreground',
+          socialButtonsBlockButton: 'bg-background border border-border text-foreground hover:bg-accent',
+          formFieldLabel: 'text-foreground',
+          formFieldInput: 'bg-background border border-border text-foreground',
+          footerActionLink: 'text-primary hover:text-primary/80',
+          dividerLine: 'bg-border',
+          dividerText: 'text-muted-foreground',
+          userButtonAvatarBox: 'border-2 border-border',
+          userButtonPopoverCard: 'bg-card border border-border shadow-lg',
+          userButtonPopoverActionButton: 'text-foreground hover:bg-accent',
+        }
+      }}
+    >
       <html lang="en">
         <body className={inter.className} suppressHydrationWarning>
           <ThemeProvider

@@ -16,7 +16,7 @@ export function PageContainer({
 }: PageContainerProps) {
   return (
     <div className={cn(
-      'container mx-auto',
+      'container mx-auto px-4 sm:px-6 lg:px-8',
       UI_CONFIG.SPACING.xl,
       UI_CONFIG.CONTAINER[maxWidth],
       className
@@ -117,7 +117,7 @@ export function CardGrid({
 }: CardGridProps) {
   return (
     <div className={cn(
-      'grid',
+      'grid px-2 sm:px-0',
       UI_CONFIG.GRID.responsive[variant],
       UI_CONFIG.GAP.lg,
       className

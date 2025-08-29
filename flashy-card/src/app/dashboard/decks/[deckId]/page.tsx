@@ -57,7 +57,7 @@ export default async function DeckDetailPage({ params }: DeckDetailPageProps) {
   }
 
   return (
-    <main className="container mx-auto flex flex-col gap-8 py-8 max-w-7xl">
+    <main className="container mx-auto flex flex-col gap-8 py-8 px-4 sm:px-6 lg:px-8 max-w-7xl">
       <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-6">
         <div className="flex flex-col gap-6">
           <div className="flex items-center gap-6">
@@ -106,7 +106,7 @@ export default async function DeckDetailPage({ params }: DeckDetailPageProps) {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 px-2 sm:px-0">
           {deckCards.map((card: Flashcard) => (
             <CardItem key={card.id} card={card} deckId={deckId} />
           ))}
