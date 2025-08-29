@@ -4,11 +4,10 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "../components/theme-provider";
-import { ClerkProvider } from "@clerk/nextjs";
-import { dark } from '@clerk/themes';
 import { HeaderAuthButtons } from "../components/header-auth-buttons";
 import { MobileNav } from "../components/mobile-nav";
 import { ThemeToggle } from "../components/theme-toggle";
+import { ClerkThemeWrapper } from "../components/clerk-theme-wrapper";
 import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -24,34 +23,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider 
-      appearance={{
-        baseTheme: undefined, // Let Clerk auto-detect based on system theme
-        elements: {
-          formButtonPrimary: 'bg-primary text-primary-foreground hover:bg-primary/90',
-          card: 'bg-card border border-border',
-          headerTitle: 'text-foreground',
-          headerSubtitle: 'text-muted-foreground',
-          socialButtonsBlockButton: 'bg-background border border-border text-foreground hover:bg-accent',
-          formFieldLabel: 'text-foreground',
-          formFieldInput: 'bg-background border border-border text-foreground',
-          footerActionLink: 'text-primary hover:text-primary/80',
-          dividerLine: 'bg-border',
-          dividerText: 'text-muted-foreground',
-          userButtonAvatarBox: 'border-2 border-border',
-          userButtonPopoverCard: 'bg-card border border-border shadow-lg',
-          userButtonPopoverActionButton: 'text-foreground hover:bg-accent',
-        }
-      }}
-    >
-      <html lang="en">
-        <body className={inter.className} suppressHydrationWarning>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
-          >
+    <html lang="en">
+      <body className={inter.className} suppressHydrationWarning>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ClerkThemeWrapper>
             <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 header-pattern">
               <div className="container mx-auto px-3 sm:px-4 lg:px-8">
                 <div className="flex h-12 sm:h-14 lg:h-16 items-center justify-between">
@@ -108,9 +88,9 @@ export default function RootLayout({
               </div>
             </header>
             {children}
-          </ThemeProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+          </ClerkThemeWrapper>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }
