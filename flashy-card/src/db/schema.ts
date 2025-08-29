@@ -4,9 +4,8 @@ export const decks = pgTable("decks", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   description: text("description"),
-  userId: varchar("userId", { length: 256 }).notNull(), // Auth0 user ID
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+  userId: varchar("user_id", { length: 256 }).notNull(), // Clerk user ID
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const cards = pgTable("cards", {
