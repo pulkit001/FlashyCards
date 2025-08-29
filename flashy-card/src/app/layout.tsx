@@ -4,9 +4,10 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "../components/theme-provider";
 import { ClerkProvider } from "@clerk/nextjs";
-import { Button } from "../components/ui/button";
 import { dark } from '@clerk/themes';
 import { HeaderAuthButtons } from "../components/header-auth-buttons";
+import { MobileNav } from "../components/mobile-nav";
+import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,10 +31,49 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <header className="relative flex items-center justify-center p-4 bg-gray-100 bg-opacity-95 shadow-md text-foreground border-b">
-              <h1 className="text-xl font-bold mb-4 sm:mb-0 text-black">Flashy Cards</h1>
-              <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-4">
-                <HeaderAuthButtons />
+            <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 header-pattern">
+              <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex h-16 items-center justify-between">
+                  {/* Logo and Brand */}
+                  <div className="flex items-center space-x-4">
+                    <Link href="/" className="flex items-center space-x-2 group">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-black dark:bg-white text-white dark:text-black font-bold text-lg shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
+                        F
+                      </div>
+                      <span className="text-xl font-bold text-foreground group-hover:text-muted-foreground transition-all duration-300">
+                        Flashy Cards
+                      </span>
+                    </Link>
+                  </div>
+
+                  {/* Navigation Links */}
+                  <nav className="hidden lg:flex items-center space-x-6">
+                    <Link 
+                      href="/dashboard" 
+                      className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200 hover:scale-105 transform"
+                    >
+                      Dashboard
+                    </Link>
+                    <Link 
+                      href="/about" 
+                      className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200 hover:scale-105 transform"
+                    >
+                      About
+                    </Link>
+                    <Link 
+                      href="/help" 
+                      className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200 hover:scale-105 transform"
+                    >
+                      Help
+                    </Link>
+                  </nav>
+
+                  {/* Auth Buttons and Mobile Nav */}
+                  <div className="flex items-center space-x-4">
+                    <MobileNav />
+                    <HeaderAuthButtons />
+                  </div>
+                </div>
               </div>
             </header>
             {children}

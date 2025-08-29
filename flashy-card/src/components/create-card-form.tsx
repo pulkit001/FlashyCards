@@ -1,14 +1,14 @@
 'use client';
 
 import { useState } from "react";
-import { Button } from "./ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { createDeck } from "@/app/dashboard/actions";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { createCard } from "@/app/dashboard/actions";
 import { Plus } from "lucide-react";
 
-export function CreateDeckForm() {
+export function CreateCardForm({ deckId }: { deckId: string }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -16,27 +16,40 @@ export function CreateDeckForm() {
       <DialogTrigger asChild>
         <Button size="lg" className="shadow-lg hover:shadow-xl">
           <Plus className="h-5 w-5" />
-          Create New Deck
+          Create New Card
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader className="space-y-3">
-          <DialogTitle className="text-2xl font-bold">Create New Deck</DialogTitle>
+          <DialogTitle className="text-2xl font-bold">Create New Card</DialogTitle>
           <DialogDescription className="text-base text-muted-foreground">
-            Fill in the details for your new flashcard deck.
+            Fill in the details for your new flashcard.
           </DialogDescription>
         </DialogHeader>
-        <form action={createDeck} onSubmit={() => setOpen(false)} className="space-y-6 py-2">
+        <form action={createCard} onSubmit={() => setOpen(false)} className="space-y-6 py-2">
+          <input type="hidden" name="deckId" value={deckId} />
           <div className="space-y-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right font-medium">
-                Name
+              <Label htmlFor="frontText" className="text-right font-medium">
+                Front
               </Label>
               <Input
-                id="name"
-                name="name"
+                id="frontText"
+                name="frontText"
                 className="col-span-3 h-11"
-                placeholder="Enter deck name"
+                placeholder="Enter front text"
+                required
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="backText" className="text-right font-medium">
+                Back
+              </Label>
+              <Input
+                id="backText"
+                name="backText"
+                className="col-span-3 h-11"
+                placeholder="Enter back text"
                 required
               />
             </div>
@@ -48,7 +61,7 @@ export function CreateDeckForm() {
                 id="description"
                 name="description"
                 className="col-span-3 h-11"
-                placeholder="Enter deck description (optional)"
+                placeholder="Enter description (optional)"
               />
             </div>
           </div>
@@ -62,7 +75,7 @@ export function CreateDeckForm() {
               Cancel
             </Button>
             <Button type="submit" size="lg">
-              Create Deck
+              Create Card
             </Button>
           </div>
         </form>

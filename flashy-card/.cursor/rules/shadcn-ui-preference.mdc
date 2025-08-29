@@ -1,0 +1,7 @@
+---
+alwaysApply: true
+description: "This rule ensures that only ShadCN UI components are used for any UI updates."
+globs: "*.tsx,*.ts,*.jsx,*.js"
+---
+# UI Library Preference
+Whenever any UI updates are made, only ShadCN UI components should be used. Do not use any other UI library or component library, such as Clerk UI components, for buttons, forms, or any other user interface elements.

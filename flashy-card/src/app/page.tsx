@@ -1,5 +1,5 @@
 'use client';
-import { SignInButton, SignUpButton, useClerk } from "@clerk/nextjs";
+import { useClerk } from "@clerk/nextjs";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -18,18 +18,31 @@ export default function Home() {
 
   return (
     <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <h1 className="text-4xl font-bold mt-8">Welcome</h1>
-        <div className="flex gap-4 mt-6">
-          <Button onClick={() => clerk.openSignIn()}>
+      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start text-center sm:text-left">
+        <div className="space-y-4">
+          <h1 className="text-5xl sm:text-6xl font-bold text-foreground">Welcome to Flashy Cards</h1>
+          <p className="text-xl text-muted-foreground max-w-2xl">
+            Create, organize, and study flashcards to enhance your learning experience.
+          </p>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-4 mt-8">
+          <Button 
+            onClick={() => clerk.openSignIn()} 
+            variant="outline"
+            size="xl"
+            className="px-8 py-4 text-lg"
+          >
             Sign In
           </Button>
-          <Button onClick={() => clerk.openSignUp()}>
+          <Button 
+            onClick={() => clerk.openSignUp()} 
+            size="xl"
+            className="px-8 py-4 text-lg shadow-lg hover:shadow-xl"
+          >
             Sign Up
           </Button>
         </div>
       </main>
-      
     </div>
   );
 }
