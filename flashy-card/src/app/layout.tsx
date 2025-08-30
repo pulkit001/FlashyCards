@@ -8,6 +8,8 @@ import { HeaderAuthButtons } from "../components/header-auth-buttons";
 import { MobileNav } from "../components/mobile-nav";
 import { ThemeToggle } from "../components/theme-toggle";
 import { ClerkThemeWrapper } from "../components/clerk-theme-wrapper";
+import { PWAInstallPrompt } from "../components/pwa-install-prompt";
+import { MobileBottomNav } from "../components/mobile-bottom-nav";
 import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -24,6 +26,35 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* PWA Meta Tags */}
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#000000" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Flashy Cards" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+        
+        {/* iOS Splash Screen */}
+        <link rel="apple-touch-startup-image" href="/icons/icon-512x512.png" />
+        
+        {/* Description */}
+        <meta name="description" content="Create and study flashcards with AI-powered generation. Unlimited decks and AI features available." />
+        <meta name="keywords" content="flashcards, study, learning, AI, education, memory" />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content="Flashy Cards - AI Flashcard Learning" />
+        <meta property="og:description" content="Create and study flashcards with AI-powered generation" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="/icons/icon-512x512.png" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Flashy Cards - AI Flashcard Learning" />
+        <meta name="twitter:description" content="Create and study flashcards with AI-powered generation" />
+        <meta name="twitter:image" content="/icons/icon-512x512.png" />
+      </head>
       <body className={inter.className} suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
@@ -87,7 +118,11 @@ export default function RootLayout({
                 </div>
               </div>
             </header>
-            {children}
+            <main className="flex-1">
+              {children}
+            </main>
+            <MobileBottomNav />
+            <PWAInstallPrompt />
           </ClerkThemeWrapper>
         </ThemeProvider>
       </body>

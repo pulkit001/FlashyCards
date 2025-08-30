@@ -1,4 +1,6 @@
-import { PricingTable } from '@clerk/nextjs'
+'use client';
+
+import { PaymentMethodSelector } from '@/components/payment-method-selector';
 
 export default function PricingPage() {
   return (
@@ -14,11 +16,11 @@ export default function PricingPage() {
           </p>
         </div>
 
-        {/* Simple Pricing Table */}
+        {/* Pricing Section */}
         <div className="max-w-4xl mx-auto">
-          <PricingTable />
+          <PaymentMethodSelector />
         </div>
       </div>
     </div>
-  )
+  );
 }

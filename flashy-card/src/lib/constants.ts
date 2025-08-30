@@ -66,6 +66,23 @@ export const ERROR_MESSAGES = {
   NO_CARDS_GENERATED: 'No flashcards were generated. Please try a different topic.',
 } as const;
 
+// Payment constants
+export const PAYMENT = {
+  RAZORPAY: {
+    CURRENCY: 'INR',
+    PRO_PRICE: 299, // in INR
+  },
+  SUPPORTED_COUNTRIES: {
+    INDIA: 'IN',
+  },
+} as const;
+
+// API endpoints
+export const API_ENDPOINTS = {
+  RAZORPAY_CREATE_ORDER: '/api/razorpay/create-order',
+  RAZORPAY_VERIFY_PAYMENT: '/api/razorpay/verify-payment',
+} as const;
+
 // Success messages
 export const SUCCESS_MESSAGES = {
   CARD_CREATED: 'Card created successfully!',
@@ -73,4 +90,5 @@ export const SUCCESS_MESSAGES = {
   CARD_DELETED: 'Card deleted successfully!',
   DECK_CREATED: 'Deck created successfully!',
   DECK_DELETED: 'Deck deleted successfully!',
+  PAYMENT_SUCCESS: 'Payment successful! Welcome to Pro!',
 } as const;

@@ -7,10 +7,12 @@ import { Menu, Crown } from 'lucide-react';
 import Link from 'next/link';
 import { ThemeToggle } from './theme-toggle';
 import { useSubscription } from '@/hooks/use-subscription';
+import { useHaptics } from '@/hooks/use-haptics';
 
 export function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
   const { isProUser } = useSubscription();
+  const { lightImpact } = useHaptics();
 
   const navigationItems = [
     { href: '/dashboard', label: 'Dashboard' },
@@ -19,6 +21,16 @@ export function MobileNav() {
     { href: '/help', label: 'Help' },
   ];
 
+  const handleMenuToggle = () => {
+    lightImpact();
+    setIsOpen(!isOpen);
+  };
+
+  const handleNavClick = () => {
+    lightImpact();
+    setIsOpen(false);
+  };
+
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
@@ -26,6 +38,7 @@ export function MobileNav() {
           variant="ghost"
           size="sm"
           className="lg:hidden p-1.5 sm:p-2 hover:bg-accent h-8 w-8 sm:h-9 sm:w-9"
+          onClick={handleMenuToggle}
         >
           <Menu className="h-4 w-4 sm:h-5 sm:w-5" />
           <span className="sr-only">Toggle menu</span>
@@ -56,7 +69,7 @@ export function MobileNav() {
                 key={item.href}
                 href={item.href}
                 className="text-lg font-medium text-muted-foreground hover:text-foreground transition-colors duration-200 py-2 px-4 rounded-lg hover:bg-accent"
-                onClick={() => setIsOpen(false)}
+                onClick={handleNavClick}
               >
                 {item.label}
               </Link>
